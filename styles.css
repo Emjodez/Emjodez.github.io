@@ -11,6 +11,10 @@ body {
     min-height: 100vh;
     backdrop-filter: blur(10px);
   }
+  .card img {
+    max-width: 100%;
+    height: auto;
+  }
   .Main__header {
     color: rgb(255, 85, 0);
   }
@@ -26,13 +30,15 @@ body {
     justify-content: center;
   }
   .container {
+    max-width: 100%;
+    box-sizing: border-box;
     height: 60vh;
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: space-around;
   }
   .card {
-    width: 4em;
+    width: 25%;
     border-radius: 2rem;
     background-size: cover;
     cursor: pointer;
@@ -79,7 +85,7 @@ body {
     display:none;
   }
   input:checked + label{
-    width: 37.5em;
+    width: 60%;
   }
   input:checked +label .description{
     opacity: 1 !important;
@@ -107,16 +113,28 @@ background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 
     max-width: 100%;
     height: auto;
   }
-  @media screen and (max-width: 768px) {
-    .card {
-      width: 60%;
-      font-size: 1.5em
-    }
+
+
+@media screen and (min-width: 900px) {
+  .card {
+    width: 3%; /* Use 33% width for screens larger than 900px */
   }
-  
-  @media screen and (max-width: 480px) {
-    .card {
-      width: 80%;
-      font-size: 1em;
-    }
+} 
+
+@media screen and (min-width: 768px) {
+  .card {
+    width: 9%; /* Adjust this value as needed */
+  }
+}
+
+
+@media screen and (min-width: 1024px) {
+  .card {
+    width: 9%; /* Adjust this value as needed */
+  }
+}
+@media screen and (min-width: 600px) {
+  .card {
+    width: 9%; /* Use 50% width for screens larger than 600px */
+  }
   }
