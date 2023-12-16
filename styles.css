@@ -1,15 +1,105 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
 body {
-    background-color: powderblue;
-    font-family: Arial;
-    font-size: 300%;
+    font-size: 125%;
+    background: url(background.png) no-repeat center;
+    background-size: cover;
+    min-height: 100vh;
+    backdrop-filter: blur(10px);
   }
-  h1 {
-    color: blue;
-  }
-  p {
-    color: red;
+  .Main__header {
+    color: rgb(255, 85, 0);
   }
   #Main {
-    color:purple
+    text-align: center;
+    padding: 10% 10% 10% 10%;
+  }
+  .wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+  .container {
+    height: 400px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+  .card {
+    width: 80px;
+    border-radius: 2rem;
+    background-size: cover;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 0 10px;
+    display: flex;
+    align-items: flex-end;
+    transition: .6s cubic-bezier(.91,-0.10,0,.99);
+    box-shadow: 5px 10px 15px -5px rgba(0, 0, 0, 0.47);
+  }
+  .card > .row{
+    color: white;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  .card > .row > .icon{
+    background:white;
+    color: black;
+    border-radius: 50%;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+  }
+  .card > .row > .description{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    height: 80px;
+    width: 520px; 
+    opacity: 0;
+    transform: translateY(30px);
+    transition-delay: .3s;
+    transition: all .3s ease;
+  }
+  .decription p{
+    color: black;
+    padding-top: 5px;
+  }
+  input{
+    display:none;
+  }
+  input:checked + label{
+    width: 600px;
+  }
+  input:checked +label .description{
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  .card[for=c1]{
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+  }
+  .card[for=c2]{
+    background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,118,1) 35%, rgba(0,212,255,1) 100%);
+  }
+  .card[for=c3]{
+    background: rgb(131,58,180);
+background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+  }
+  .card[for=c4]{
+    background: rgb(238,174,202);
+background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 
   }

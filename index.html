@@ -5,13 +5,58 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Michael's work</title>
         <link rel="stylesheet" href="styles.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+            </style>
+            
     </head>
 <body>
 
     <div id="Main">
-        <h1>Welcome to my fantastic website.</h1>
-        <h2>I'll try to update it as often as possible :3.</h2>
-        <h3>Testing new stuff</h3>
+        <h1 class="Main__header">Welcome to my fantastic website.</h1>
+        <h2 class="Main__header">I'll try to update it as often as possible :3.</h2>
+        <h3 class="Main__header">Testing new stuff</h3>
+        <input type="button" value="Click me for info." onclick="alert('I will make this website amazing.')">
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <input type="radio" name="slide" id="c1" checked>
+            <label for="c1" class="card">
+                <div class="row">
+                    <div class="icon">1</div>
+                    <div class="description">
+                        <h4>School: I am currently studying in Sl.Tzn.</h4>
+                    </div>
+                </div>
+            </label>
+            <input type="radio" name="slide" id="c2" checked>
+            <label for="c2" class="card">
+                <div class="row">
+                    <div class="icon">2</div>
+                    <div class="description">
+                        <h4>Achievements: I've participated in html school classes ig.</h4>
+                    </div>
+                </div>
+            </label>
+            <input type="radio" name="slide" id="c3" checked>
+            <label for="c3" class="card">
+                <div class="row">
+                    <div class="icon">3</div>
+                    <div class="description">
+                        <h4>Languages: Currently learning html, css, js, Python and C#.</h4>
+                    </div>
+                </div>
+            </label>
+            <input type="radio" name="slide" id="c4" checked>
+            <label for="c4" class="card">
+                <div class="row">
+                    <div class="icon">4</div>
+                    <div class="description">
+                        <h4>Contact: Discord @Emjodez</h4>
+                    </div>
+                </div>
+            </label>
+        </div>
     </div>
 </body>
 </html>
