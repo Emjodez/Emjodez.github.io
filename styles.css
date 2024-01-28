@@ -1,4 +1,4 @@
-* {
+/* * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -116,10 +116,10 @@ background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 
 
 @media screen and (min-width: 600px) {
   .card {
-    width: 9%; /* Use 50% width for screens larger than 600px */
+    width: 9%; /* Use 50% width for screens larger than 600px
   }
   .container {
     flex-wrap: nowrap;
 }
   }
-  
+   */
