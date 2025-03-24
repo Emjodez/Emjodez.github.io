@@ -1,4 +1,4 @@
- @media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   #Main {
     padding: 5%;
   }
@@ -20,6 +20,8 @@
     flex-direction: column; /* Stack cards vertically */
     height: auto;
     gap: 15px; /* Add spacing */
+    justify-content: center;
+    align-items: center;
   }
 
   .card {
@@ -27,6 +29,19 @@
     height: auto;
     padding: 20px;
     margin: 10px 0;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Ensure background colors are visible */
+  .card[for=c1], .card[for=c2], .card[for=c3], .card[for=c4] {
+    min-height: 120px; /* Prevent cards from collapsing */
   }
 
   .card > .row {
@@ -43,7 +58,7 @@
   .card > .row > .description {
     width: auto;
     text-align: center;
-    opacity: 1; /* Make sure text is visible */
+    opacity: 1; /* Ensure text is visible */
     transform: translateY(0);
   }
 
@@ -51,4 +66,3 @@
     width: 100%;
   }
 }
-  
