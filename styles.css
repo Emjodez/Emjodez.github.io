@@ -1,68 +1,135 @@
-@media screen and (max-width: 768px) {
-  #Main {
-    padding: 5%;
-  }
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
 
-  h1 {
-    font-size: 1.5em;
-  }
-
-  .wrapper {
-    height: auto;
-    padding: 20px;
+/* Body Styling */
+body {
+    font-size: 1em;
+    background: url(background.png) no-repeat center;
+    background-size: cover;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  .container {
-    flex-wrap: wrap; /* Allow wrapping on mobile */
-    flex-direction: column; /* Stack cards vertically */
-    height: auto;
-    gap: 15px; /* Add spacing */
     justify-content: center;
-    align-items: center;
-  }
+}
 
-  .card {
-    width: 90%; /* Full width for better readability */
-    height: auto;
-    padding: 20px;
-    margin: 10px 0;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+/* Main Header */
+.Main__header {
+    color: rgb(255, 85, 0);
     text-align: center;
-    transition: all 0.3s ease-in-out;
+}
+
+/* Main Container */
+#Main {
+    text-align: center;
+    padding: 5%;
+}
+
+/* Wrapper */
+.wrapper {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* Card Container */
+.container {
+    max-width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Card Styling */
+.card {
+    width: 250px; /* Fixed width for consistency */
+    height: auto;
+    min-height: 150px; /* Ensure visibility */
+    border-radius: 15px;
+    background-size: cover;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 20px;
+    text-align: center;
+    color: white;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-  }
+    transition: transform 0.3s ease-in-out;
+}
 
-  /* Ensure background colors are visible */
-  .card[for=c1], .card[for=c2], .card[for=c3], .card[for=c4] {
-    min-height: 120px; /* Prevent cards from collapsing */
-  }
+.card:hover {
+    transform: scale(1.05);
+}
 
-  .card > .row {
+/* Card Content */
+.card > .row {
+    display: flex;
     flex-direction: column;
     align-items: center;
-  }
+}
 
-  .card > .row > .icon {
-    width: 2.5em;
-    height: 2.5em;
-    font-size: 1.2em;
-  }
+/* Card Icon */
+.card > .row > .icon {
+    background: white;
+    color: black;
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
-  .card > .row > .description {
+/* Card Description */
+.card > .row > .description {
     width: auto;
     text-align: center;
-    opacity: 1; /* Ensure text is visible */
-    transform: translateY(0);
-  }
+}
 
-  input:checked + label {
-    width: 100%;
-  }
+/* Remove Input Styling */
+input {
+    display: none;
+}
+
+/* Background Colors for Cards */
+.card[for=c1] {
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+}
+.card[for=c2] {
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,118,1) 35%, rgba(0,212,255,1) 100%);
+}
+.card[for=c3] {
+    background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+}
+.card[for=c4] {
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    /* Make everything more readable */
+    #Main {
+        padding: 10%;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 350px; /* Prevent too wide cards */
+    }
 }
