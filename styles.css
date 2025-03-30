@@ -16,44 +16,56 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden; 
 }
 
 /* Main Header */
 .Main__header {
     color: rgb(255, 85, 0);
     text-align: center;
+    margin: 20px 0; 
 }
 
 /* Main Container */
 #Main {
     text-align: center;
     padding: 5%;
+    width:100%;
 }
 
 /* Wrapper */
 .wrapper {
-    width: 200%;
-    height: auto;
+    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
 }
 
 /* Card Container */
 .container {
-    max-width: 200%;
+    max-width: 100%;
     height: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
 }
+.icon {
+    font-size: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    width: 100%; 
+    height: 100%; /* Ensure it stretches to fill its parent container */
+}
 
 /* Card Styling */
 .card {
-    width: 500px;
-    height: 300px;
+    width: 300px;
+    height: 200px;
     border-radius: 15px;
     background-size: cover;
     cursor: pointer;
@@ -62,23 +74,21 @@ body {
     text-align: center;
     color: white;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out, width 0.6s ease-in-out;
+    transition: transform 0.3s ease, width 0.6s ease;
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-end;
     position: relative;
 }
-
 /* Input (Hidden) */
 input {
     display: none;
 }
 
-/* Default collapsed state */
 .description {
     opacity: 0;
     transform: translateY(30px);
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* When a card is selected */
@@ -102,34 +112,28 @@ input:checked + label .row .description {
     opacity: 1;
     transform: translateY(0);
 }
-.card .description {
-    display: flex;
-    align-items: center;  
-    justify-content: center; 
-    text-align: center; 
-    width: 100%;
-    height: 100%;
-
+input:checked + label .icon {
+    display: None !important;
+}
 
 /* Card Content */
 .card > .row {
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: center;  /* Centers vertically */
+    justify-content: center; /* Centers horizontally */
+    text-align: center;
 }
 
-/* Card Icon */
-.card > .row > .icon {
-    background: white;
-    color: black;
-    border-radius: 50%;
-    width: 3em;
-    height: 3em;
+
+
+.row {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 10px;
+    flex-direction: column;
+    justify-content: center; /* Ensures vertical centering within the row */
+    align-items: center; /* Ensures horizontal centering within the row */
+    text-align: center; /* Centers text inside the row */
 }
 
 /* Card Description */
@@ -140,9 +144,7 @@ input:checked + label .row .description {
     transform: translateY(30px);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.icon{
-    display:None;
-}
+
 /* Background Colors for Cards */
 .card[for=c1] {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
