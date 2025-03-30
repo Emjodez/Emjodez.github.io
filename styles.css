@@ -74,10 +74,28 @@ input {
     display: none;
 }
 
-/* Expand Card When Clicked */
+/* Default collapsed state */
+.description {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.3s ease;
+}
+
+/* When a card is selected */
 input:checked + label {
     width: 60%;
 }
+
+input:checked + label .description {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Reset all cards when another is clicked */
+.container input:not(:checked) + label {
+    width: 25%;
+}
+
 
 /* Show Description When Clicked */
 input:checked + label .row .description {
