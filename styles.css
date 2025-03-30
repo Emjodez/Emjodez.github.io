@@ -161,61 +161,60 @@ input:checked + label .icon {
     background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 }
 
-
 @media screen and (max-width: 768px) {
-  #Main {
-    padding: 5%;
-  }
 
-  h1 {
-    font-size: 1.5em;
-  }
+    input[type="radio"] {
+        display: none;
+    }
 
-  .wrapper {
-    height: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    body {
+        overflow-y: auto;
+        height: auto;
+        }
+    .icon {
+        visibility: hidden;
+        }
+    .card {
+        width: 90%;
+        max-width: 350px;
+        height: auto;
+    }
 
-  .container {
-    flex-wrap: wrap; /* Allow wrapping on mobile */
-    flex-direction: column; /* Stack cards vertically */
-    height: auto;
-    gap: 15px; /* Add spacing */
-  }
+    
+    .description {
+        opacity: 1; /* Make the descriptions visible */
+        transform: translateY(0); /* Ensure they are properly positioned */
+    }
 
-  .card {
-    width: 90%; /* Full width for better readability */
-    height: auto;
-    padding: 20px;
-    margin: 10px 0;
-  }
+    
+    #Main {
+        padding: 5%;
+        margin-top: 20px;
+    }
 
-  .card > .row {
-    flex-direction: column;
-    align-items: center;
-  }
+    
+    .wrapper {
+        width: 100%;
+        gap: 10px;
+    }
 
-  .card > .row > .icon {
-    width: 2.5em;
-    height: 2.5em;
-    font-size: 1.2em;
-  }
+    
+    .container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+    }
 
-  .card > .row > .description {
-    width: auto;
-    text-align: center;
-    opacity: 1; /* Make sure text is visible */
-    transform: translateY(0);
-  }
+    
+    .icon {
+        font-size: 1.5em;
+        text-align: center;
+    }
 
-  input:checked + label {
-    width: 100%;
-  }
-}
-.icon {
-    visibility: hidden;
+    
+    input[type="radio"]:checked + label .description {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
