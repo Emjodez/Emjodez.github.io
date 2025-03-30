@@ -1,4 +1,4 @@
-/* General Reset */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,7 +6,7 @@
     font-family: 'Roboto', sans-serif;
 }
 
-/* Body Styling */
+
 body {
     font-size: 1em;
     background: url(background.png) no-repeat center;
@@ -15,26 +15,26 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Align content at the top */
+    justify-content: flex-start; 
     margin: 0;
     padding-top: 30px;
     overflow:hidden;
 }
 
-/* Main Header */
+
 .Main__header {
     color: rgb(255, 85, 0);
     text-align: center;
     margin-top:30px;
     margin-bottom: 100px; 
 }
-/* Main Container */
+
 #Main {
-    padding: 10px; /* Remove padding to decrease space around the content */
-    margin-bottom: 10px; /* Optional: decrease space between header and cards */
+    padding: 10px; 
+    margin-bottom: 10px; 
 }
 
-/* Wrapper */
+
 .wrapper {
     width: 100%;
     height: 100%;
@@ -42,10 +42,10 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    overflow: hidden; /* Prevent any overflow within wrapper */
+    overflow: hidden; 
 }
 
-/* Card Container */
+
 .container {
     max-width: 100%;
     height: auto;
@@ -63,10 +63,10 @@ body {
     font-weight: bold;
     margin-bottom: 10px;
     width: 100%; 
-    height: 100%; /* Ensure it stretches to fill its parent container */
+    height: 100%; 
 }
 
-/* Card Styling */
+
 .card {
     width: 300px;
     height: 200px;
@@ -84,7 +84,7 @@ body {
     justify-content: flex-end;
     position: relative;
 }
-/* Input (Hidden) */
+
 input {
     display: none;
 }
@@ -95,7 +95,7 @@ input {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* When a card is selected */
+
 input:checked + label {
     width: 60%;
 }
@@ -105,13 +105,13 @@ input:checked + label .description {
     transform: translateY(0);
 }
 
-/* Reset all cards when another is clicked */
+
 .container input:not(:checked) + label {
     width: 25%;
 }
 
 
-/* Show Description When Clicked */
+
 input:checked + label .row .description {
     opacity: 1;
     transform: translateY(0);
@@ -120,27 +120,25 @@ input:checked + label .icon {
     display: None !important;
 }
 
-/* Card Content */
+
 .card > .row {
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;  /* Centers vertically */
-    justify-content: center; /* Centers horizontally */
+    align-items: center;  
+    justify-content: center; 
     text-align: center;
 }
-
-
 
 .row {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Ensures vertical centering within the row */
-    align-items: center; /* Ensures horizontal centering within the row */
-    text-align: center; /* Centers text inside the row */
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
 }
 
-/* Card Description */
+
 .card > .row > .description {
     width: auto;
     text-align: center;
@@ -149,7 +147,7 @@ input:checked + label .icon {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Background Colors for Cards */
+
 .card[for=c1] {
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
 }
@@ -165,19 +163,40 @@ input:checked + label .icon {
 
 
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
-    #Main {
-        padding: 10%;
-    }
 
+    #Main {
+        padding: 5%;
+        margin-top: 20px;
+    }
+    .wrapper {
+        width: 100%;
+        gap: 10px;
+    }
     .container {
         flex-direction: column;
         align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
     }
-
+    body {
+        overflow-x: hidden; 
+        overflow-y: auto; 
+    }
+    .icon {
+        visibility: hidden;
+    }
+    .description {
+        width: 60%;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .row {
+        width: 60%;
+        opacity: 1;
+        transform: translateY(0);
+    }
     .card {
-        width: 90%;
-        max-width: 350px;
+        width: 60%;
     }
 }
