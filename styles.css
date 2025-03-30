@@ -80,7 +80,7 @@ input:checked + label {
 }
 
 /* Show Description When Clicked */
-input:checked + label .description {
+input:checked + label .row .description {
     opacity: 1;
     transform: translateY(0);
 }
