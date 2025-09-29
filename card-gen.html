@@ -16,28 +16,32 @@
   <input type="file" id="heartUpload"> ♥ Heart<br>
   <input type="file" id="clubUpload"> ♣ Club<br>
   <input type="file" id="diamondUpload"> ♦ Diamond<br><br>
+  <p>Upload a background image (optional):</p>
+  <input type="file" id="bgUpload"><br><br>
   <button onclick="generateDeck()">Generate Deck</button>
   
   <div id="deck"></div>
 
   <script>
     let suits = {};
+    let bgImage = null;
     const cardWidth = 400, cardHeight = 600;
 
-    function loadImage(file, suitName) {
+    function loadImage(file, target, callback) {
       const reader = new FileReader();
       reader.onload = e => {
         const img = new Image();
-        img.onload = () => suits[suitName] = img;
+        img.onload = () => callback(img);
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    document.getElementById("spadeUpload").onchange = e => loadImage(e.target.files[0], "spade");
-    document.getElementById("heartUpload").onchange = e => loadImage(e.target.files[0], "heart");
-    document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], "club");
-    document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
+    document.getElementById("spadeUpload").onchange = e => loadImage(e.target.files[0], "spade", img => suits["spade"]=img);
+    document.getElementById("heartUpload").onchange = e => loadImage(e.target.files[0], "heart", img => suits["heart"]=img);
+    document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], "club", img => suits["club"]=img);
+    document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond", img => suits["diamond"]=img);
+    document.getElementById("bgUpload").onchange = e => loadImage(e.target.files[0], "bg", img => bgImage = img);
 
     function drawCorner(ctx, rank, suitImg, x, y, color, rotate=false) {
       const fontSize = 60;
@@ -95,8 +99,12 @@
     }
 
     function drawCard(ctx, rank, suitImg, color, suitName) {
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, cardWidth, cardHeight);
+      if(bgImage){
+        ctx.drawImage(bgImage, 0, 0, cardWidth, cardHeight);
+      } else {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, cardWidth, cardHeight);
+      }
       ctx.strokeRect(0, 0, cardWidth, cardHeight);
 
       const insetX = 50, insetY = 60;
@@ -122,6 +130,7 @@
             [0,0,0],
             [1,0,1]
           ];
+          positions = getAlignedPositions(sevenGrid); break;
         case 8:
           const eightGrid = [
             [1,0,1],
@@ -152,18 +161,15 @@
           positions = getAlignedPositions(tenGrid); break;
       }
 
-positions.forEach(pos=>{
-  const [x, y] = [pos[0]*cardWidth, pos[1]*cardHeight];
-
-  const rotate = y > cardHeight/2; 
-
-  ctx.save();
-  ctx.translate(x, y);
-  if(rotate) ctx.rotate(Math.PI);
-  ctx.drawImage(suitImg, -size/2, -size/2, size, size);
-  ctx.restore();
-});
-
+      positions.forEach(pos=>{
+        const [x, y] = [pos[0]*cardWidth, pos[1]*cardHeight];
+        const rotate = y > cardHeight/2; 
+        ctx.save();
+        ctx.translate(x, y);
+        if(rotate) ctx.rotate(Math.PI);
+        ctx.drawImage(suitImg, -size/2, -size/2, size, size);
+        ctx.restore();
+      });
     }
 
     function generateDeck(){
