@@ -3,40 +3,15 @@
 <head>
   <title>Custom Playing Card Deck Generator</title>
   <style>
-    body { 
-      font-family: sans-serif; 
-      text-align: center; 
-      background: #f9f9f9; 
-    }
-    /* Style the generated images instead of the canvas */
-    #deck img {
-      /* This controls the display size on the page */
-      width: 150px;
-      height: 220px;
-      /* Reduced margin to bring cards closer */
-      margin: 2px;
-      border: 1px solid #aaa;
-      border-radius: 8px;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    #deck { 
-      display: flex; 
-      flex-wrap: wrap; 
-      justify-content: center; 
-      padding-top: 15px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    body { font-family: sans-serif; text-align: center; background: #f9f9f9; }
+    img.card { margin: 5px; border: 1px solid #aaa; border-radius: 8px; background: white; }
+    #deck { display: flex; flex-wrap: wrap; justify-content: center; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
   <h2>Custom Playing Card Generator</h2>
-  <p>Upload your suit icons (PNG/SVG recommended):</p>
+  <p>Upload your suit icons (PNG/SVG):</p>
   <input type="file" id="spadeUpload"> ♠ Spade<br>
   <input type="file" id="heartUpload"> ♥ Heart<br>
   <input type="file" id="clubUpload"> ♣ Club<br>
@@ -47,11 +22,7 @@
 
   <script>
     let suits = {};
-    //--- MODIFICATION: Quality Improvement ---
-    // We'll render the cards at a higher resolution (2x) for better quality.
-    const scale = 2;
-    const cardWidth = 150 * scale;
-    const cardHeight = 220 * scale;
+    const cardWidth = 300, cardHeight = 440; // double resolution for clarity
 
     function loadImage(file, suitName) {
       const reader = new FileReader();
@@ -69,92 +40,70 @@
     document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
 
     function drawCard(ctx, rank, suitImg, color) {
-      // Clear and draw card background
-      ctx.clearRect(0, 0, cardWidth, cardHeight);
+      // card background
       ctx.fillStyle = "white";
-      ctx.strokeStyle = '#aaa';
-      ctx.lineWidth = 1 * scale;
-      ctx.beginPath();
-      ctx.roundRect(0, 0, cardWidth, cardHeight, [8 * scale]);
-      ctx.fill();
+      ctx.fillRect(0, 0, cardWidth, cardHeight);
+      ctx.strokeRect(0, 0, cardWidth, cardHeight);
 
-      // --- MODIFICATION: All drawing values are multiplied by 'scale' for high-res output ---
+      // rank text (corner)
       ctx.fillStyle = color;
-      ctx.font = `${28 * scale}px 'Cinzel', serif`;
-      ctx.textAlign = "center";
-      
-      // Top-left corner
-      ctx.fillText(rank, 20 * scale, 35 * scale);
-      ctx.drawImage(suitImg, 12 * scale, 42 * scale, 20 * scale, 20 * scale);
+      ctx.font = "56px 'Cinzel', serif";
+      ctx.textAlign = "left";
+      ctx.fillText(rank, 24, 70);
+      ctx.drawImage(suitImg, 24, 80, 36, 36);
 
-      // Bottom-right corner (rotated for perfect symmetry)
-      ctx.save();
-      ctx.translate(cardWidth, cardHeight);
-      ctx.rotate(Math.PI); // 180 degrees
-      ctx.fillText(rank, 20 * scale, 35 * scale);
-      ctx.drawImage(suitImg, 12 * scale, 42 * scale, 20 * scale, 20 * scale);
-      ctx.restore();
+      // mirrored bottom-right
+      ctx.textAlign = "right";
+      ctx.fillText(rank, cardWidth - 24, cardHeight - 24 - 36);
+      ctx.drawImage(suitImg, cardWidth - 72, cardHeight - 72, 36, 36);
 
-      // Main symbols in card body
-      const positions = {
-          'A': [[0.5, 0.5]],
-          2: [[0.5, 0.3], [0.5, 0.7]],
-          3: [[0.5, 0.25], [0.5, 0.5], [0.5, 0.75]],
-          4: [[0.3, 0.3], [0.7, 0.3], [0.3, 0.7], [0.7, 0.7]],
-          5: [[0.3, 0.3], [0.7, 0.3], [0.5, 0.5], [0.3, 0.7], [0.7, 0.7]],
-          6: [[0.3, 0.25], [0.7, 0.25], [0.3, 0.5], [0.7, 0.5], [0.3, 0.75], [0.7, 0.75]],
-          7: [[0.3, 0.2], [0.7, 0.2], [0.3, 0.4], [0.7, 0.4], [0.5, 0.5], [0.3, 0.8], [0.7, 0.8]],
-          8: [[0.3, 0.2], [0.7, 0.2], [0.3, 0.4], [0.7, 0.4], [0.5, 0.3], [0.5, 0.7], [0.3, 0.8], [0.7, 0.8]],
-          9: [[0.3, 0.2], [0.7, 0.2], [0.3, 0.38], [0.7, 0.38], [0.5, 0.5], [0.3, 0.62], [0.7, 0.62], [0.3, 0.8], [0.7, 0.8]],
-          10: [[0.3, 0.2], [0.7, 0.2], [0.3, 0.35], [0.7, 0.35], [0.5, 0.27], [0.5, 0.73], [0.3, 0.5], [0.7, 0.5], [0.3, 0.8], [0.7, 0.8]],
-          'J': [[0.5, 0.5]], 'Q': [[0.5, 0.5]], 'K': [[0.5, 0.5]],
+      // main symbols
+      let positions = {
+        2: [[0.5,0.38],[0.5,0.62]],
+        3: [[0.5,0.3],[0.5,0.5],[0.5,0.7]],
+        4: [[0.35,0.35],[0.65,0.35],[0.35,0.65],[0.65,0.65]],
+        5: [[0.35,0.35],[0.65,0.35],[0.5,0.5],[0.35,0.65],[0.65,0.65]],
+        6: [[0.35,0.3],[0.65,0.3],[0.35,0.5],[0.65,0.5],[0.35,0.7],[0.65,0.7]],
+        7: [[0.5,0.2],[0.35,0.35],[0.65,0.35],[0.5,0.5],[0.35,0.65],[0.65,0.65],[0.5,0.8]],
+        8: [[0.35,0.2],[0.65,0.2],[0.35,0.35],[0.65,0.35],[0.35,0.5],[0.65,0.5],[0.35,0.65],[0.65,0.65]],
+        9: [[0.5,0.15],[0.35,0.3],[0.65,0.3],[0.35,0.5],[0.65,0.5],[0.5,0.55],[0.35,0.7],[0.65,0.7],[0.5,0.85]],
+        10:[[0.35,0.22],[0.65,0.22],[0.35,0.35],[0.65,0.35],[0.35,0.48],[0.65,0.48],
+            [0.35,0.61],[0.65,0.61],[0.35,0.74],[0.65,0.74]]
       };
-      
-      let size;
-      if (['J', 'Q', 'K', 'A'].includes(rank)) {
-        size = 80 * scale; // Larger for face cards
-      } else {
-        size = 28 * scale; // Standard size for number cards
-      }
 
-      if (positions[rank]) {
-        positions[rank].forEach(pos => {
-          ctx.drawImage(suitImg, pos[0] * cardWidth - size / 2, pos[1] * cardHeight - size / 2, size, size);
-        });
-      }
+      let size = 56; // bigger for higher quality
+      positions[rank].forEach(pos => {
+        ctx.drawImage(suitImg, pos[0]*cardWidth - size/2, pos[1]*cardHeight - size/2, size, size);
+      });
     }
 
     function generateDeck() {
       const deckDiv = document.getElementById("deck");
-      deckDiv.innerHTML = ""; // Clear previous deck
-      
-      // --- MODIFICATION: Efficiency ---
-      // Create a single canvas in memory to draw on, instead of one for each card.
-      const canvas = document.createElement("canvas");
-      canvas.width = cardWidth;
-      canvas.height = cardHeight;
-      const ctx = canvas.getContext("2d");
-
-      const ranks = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
+      deckDiv.innerHTML = "";
+      const ranks = [2,3,4,5,6,7,8,9,10];
       const suitList = [
-        {name: "spade", color: "black"},
-        {name: "heart", color: "red"},
-        {name: "club", color: "black"},
-        {name: "diamond", color: "red"}
+        {name:"spade", color:"black"},
+        {name:"heart", color:"red"},
+        {name:"club", color:"black"},
+        {name:"diamond", color:"red"}
       ];
 
       suitList.forEach(suit => {
         ranks.forEach(rank => {
-          if (!suits[suit.name]) return; // Skip if suit image isn't uploaded
-          
+          if (!suits[suit.name]) return;
+
+          // create offscreen canvas
+          let canvas = document.createElement("canvas");
+          canvas.width = cardWidth;
+          canvas.height = cardHeight;
+          let ctx = canvas.getContext("2d");
+
           drawCard(ctx, rank, suits[suit.name], suit.color);
-          
-          // --- MODIFICATION: Use <img> tags ---
-          // Convert the canvas drawing to a high-quality image file (data URL)
-          // and create an <img> element with it. This makes it a real, copyable image.
-          const img = document.createElement('img');
-          img.src = canvas.toDataURL('image/png');
-          img.alt = `Card: ${rank} of ${suit.name}s`;
+
+          // convert canvas to real image
+          let img = new Image();
+          img.src = canvas.toDataURL("image/png");
+          img.className = "card";
           deckDiv.appendChild(img);
         });
       });
