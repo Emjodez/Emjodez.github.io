@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Custom Playing Card Deck Generator</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #f9f9f9; }
+    img.card { margin: 5px; border: 1px solid #aaa; border-radius: 8px; background: white; }
+    #deck { display: flex; flex-wrap: wrap; justify-content: center; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h2>Custom Playing Card Generator</h2>
+  <p>Upload your suit icons (PNG/SVG):</p>
+  <input type="file" id="spadeUpload"> ♠ Spade<br>
+  <input type="file" id="heartUpload"> ♥ Heart<br>
+  <input type="file" id="clubUpload"> ♣ Club<br>
+  <input type="file" id="diamondUpload"> ♦ Diamond<br><br>
+  <button onclick="generateDeck()">Generate Deck</button>
+  
+  <div id="deck"></div>
+
+  <script>
+    let suits = {};
+    const cardWidth = 400, cardHeight = 600;
+
+    function loadImage(file, suitName) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => suits[suitName] = img;
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.getElementById("spadeUpload").onchange = e => loadImage(e.target.files[0], "spade");
+    document.getElementById("heartUpload").onchange = e => loadImage(e.target.files[0], "heart");
+    document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], "club");
+    document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
+
+    function drawCorner(ctx, rank, suitImg, x, y, color, rotate=false) {
+      const fontSize = 60;
+      const suitSize = 36;
+      const spacing = 6;
+
+      ctx.save();
+      ctx.translate(x, y);
+      if (rotate) ctx.rotate(Math.PI);
+
+      ctx.fillStyle = color;
+      ctx.font = `${fontSize}px 'Cinzel', serif`;
+      ctx.textAlign = "center";
+      ctx.fillText(rank, 0, 0);
+      ctx.drawImage(suitImg, -suitSize/2, fontSize/2 + spacing, suitSize, suitSize);
+
+      ctx.restore();
+    }
+
+    function getAlignedPositions(grid) {
+      const positions = [];
+      const colX = [0.3, 0.5, 0.7];
+
+      const sideCols = [0,2];
+      let sideYs = [[],[]]; 
+
+      sideCols.forEach((c,i)=>{
+        const pipRows = [];
+        for(let r=0;r<grid.length;r++) if(grid[r][c]===1) pipRows.push(r);
+        const step = 1/(pipRows.length+1);
+        pipRows.forEach((rowIndex,j)=>{
+          const y = step*(j+1);
+          sideYs[i].push(y);
+          positions.push([colX[c],y]);
+        });
+      });
+
+      const combinedSideYs = Array.from(new Set([...sideYs[0], ...sideYs[1]])).sort((a,b)=>a-b);
+
+      const middleCol = 1;
+      for(let r=0;r<grid.length;r++){
+        if(grid[r][middleCol]===1){
+          let above = combinedSideYs.filter(y=>y < (r+0.5)/grid.length);
+          let below = combinedSideYs.filter(y=>y > (r+0.5)/grid.length);
+
+          const yTop = above.length>0 ? Math.max(...above) : 0;
+          const yBottom = below.length>0 ? Math.min(...below) : 1;
+
+          const y = (yTop + yBottom)/2;
+          positions.push([colX[middleCol], y]);
+        }
+      }
+
+      return positions;
+    }
+
+    function drawCard(ctx, rank, suitImg, color, suitName) {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, cardWidth, cardHeight);
+      ctx.strokeRect(0, 0, cardWidth, cardHeight);
+
+      const insetX = 50, insetY = 60;
+      drawCorner(ctx, rank, suitImg, insetX, insetY, color, false);
+      drawCorner(ctx, rank, suitImg, cardWidth - insetX, insetY, color, false);
+      drawCorner(ctx, rank, suitImg, insetX, cardHeight - insetY, color, true);
+      drawCorner(ctx, rank, suitImg, cardWidth - insetX, cardHeight - insetY, color, true);
+
+      const size = 60;
+      let positions = [];
+
+      switch(rank){
+        case 2: positions = [[0.5,0.2],[0.5,0.8]]; break;
+        case 3: positions = [[0.5,0.2],[0.5,0.5],[0.5,0.8]]; break;
+        case 4: positions = [[0.3,0.25],[0.7,0.25],[0.3,0.75],[0.7,0.75]]; break;
+        case 5: positions = [[0.3,0.25],[0.7,0.25],[0.5,0.5],[0.3,0.75],[0.7,0.75]]; break;
+        case 6: positions = [[0.3,0.2],[0.7,0.2],[0.3,0.5],[0.7,0.5],[0.3,0.8],[0.7,0.8]]; break;
+        case 7:
+          const sevenGrid = [
+            [1,0,1],
+            [0,1,0],
+            [1,0,1],
+            [0,0,0],
+            [1,0,1]
+          ];
+        case 8:
+          const eightGrid = [
+            [1,0,1],
+            [0,1,0],
+            [1,0,1],
+            [0,1,0],
+            [1,0,1]
+          ];
+          positions = getAlignedPositions(eightGrid); break;
+        case 9:
+          const nineGrid = [
+            [1,0,1],
+            [1,0,1],
+            [0,1,0],
+            [1,0,1],
+            [1,0,1]
+          ];
+          positions = getAlignedPositions(nineGrid); break;
+        case 10:
+          const tenGrid = [
+            [1,0,1],
+            [0,1,0],
+            [1,0,1],
+            [1,0,1],
+            [0,1,0],
+            [1,0,1]
+          ];
+          positions = getAlignedPositions(tenGrid); break;
+      }
+
+positions.forEach(pos=>{
+  const [x, y] = [pos[0]*cardWidth, pos[1]*cardHeight];
+
+  const rotate = y > cardHeight/2; 
+
+  ctx.save();
+  ctx.translate(x, y);
+  if(rotate) ctx.rotate(Math.PI);
+  ctx.drawImage(suitImg, -size/2, -size/2, size, size);
+  ctx.restore();
+});
+
+    }
+
+    function generateDeck(){
+      const deckDiv = document.getElementById("deck");
+      deckDiv.innerHTML = "";
+      const ranks = [2,3,4,5,6,7,8,9,10];
+      const suitList = [
+        {name:"spade", color:"black"},
+        {name:"heart", color:"red"},
+        {name:"club", color:"black"},
+        {name:"diamond", color:"red"}
+      ];
+
+      suitList.forEach(suit=>{
+        ranks.forEach(rank=>{
+          if(!suits[suit.name]) return;
+          const canvas = document.createElement("canvas");
+          canvas.width = cardWidth;
+          canvas.height = cardHeight;
+          const ctx = canvas.getContext("2d");
+
+          drawCard(ctx, rank, suits[suit.name], suit.color, suit.name);
+
+          const img = new Image();
+          img.src = canvas.toDataURL("image/png");
+          img.className = "card";
+          deckDiv.appendChild(img);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
