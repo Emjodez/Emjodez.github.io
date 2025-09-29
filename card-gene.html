@@ -3,11 +3,48 @@
 <head>
   <title>Custom Playing Card Deck Generator</title>
   <style>
-    body { font-family: sans-serif; text-align: center; background: #f9f9f9; }
-    canvas { margin: 5px; border: 1px solid #aaa; border-radius: 8px; background: white; }
-    #deck { display: flex; flex-wrap: wrap; justify-content: center; }
+    body { font-family: 'Cinzel', serif; text-align: center; background: #f9f9f9; }
+    .card {
+      width: 150px;
+      height: 220px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      background: white;
+      margin: 5px;
+      display: inline-block;
+      position: relative;
+    }
+    .corner {
+      position: absolute;
+      font-size: 28px;
+    }
+    .corner img {
+      width: 18px;
+      height: 18px;
+      display: block;
+      margin-top: 3px;
+    }
+    .top-left { top: 8px; left: 10px; text-align: left; }
+    .bottom-right { bottom: 8px; right: 10px; text-align: right; transform: rotate(180deg); }
+    .symbols {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 80px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+    .row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+    .symbols img { width: 28px; height: 28px; }
   </style>
-  <!-- Google Font for nicer style -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,47 +60,22 @@
 
   <script>
     let suits = {};
-    const cardWidth = 150, cardHeight = 220;
-
     function loadImage(file, suitName) {
       const reader = new FileReader();
       reader.onload = e => {
-        const img = new Image();
-        img.onload = () => suits[suitName] = img;
-        img.src = e.target.result;
+        suits[suitName] = e.target.result;
       };
       reader.readAsDataURL(file);
     }
-
     document.getElementById("spadeUpload").onchange = e => loadImage(e.target.files[0], "spade");
     document.getElementById("heartUpload").onchange = e => loadImage(e.target.files[0], "heart");
     document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], "club");
     document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
 
-    function drawCard(ctx, rank, suitImg, color) {
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, cardWidth, cardHeight);
-      ctx.strokeRect(0, 0, cardWidth, cardHeight);
-
-      // Rank text (corner)
-      ctx.fillStyle = color;
-      ctx.font = "28px 'Cinzel', serif";
-      ctx.textAlign = "left";
-      ctx.fillText(rank, 12, 35);
-
-      // Small suit under rank
-      let smallSize = 18;
-      ctx.drawImage(suitImg, 12, 40, smallSize, smallSize);
-
-      // Rank mirrored in bottom-right corner
-      ctx.textAlign = "right";
-      ctx.fillText(rank, cardWidth - 12, cardHeight - 12 - smallSize);
-      ctx.drawImage(suitImg, cardWidth - 30, cardHeight - 30, smallSize, smallSize);
-
-      // Main symbols in card body
-      let positions = {
-        2: [[0.5,0.25],[0.5,0.75]],
-        3: [[0.5,0.25],[0.5,0.5],[0.5,0.75]],
+    function positions(rank) {
+      const layout = {
+        2: [[0.5,0.2],[0.5,0.8]],
+        3: [[0.5,0.2],[0.5,0.5],[0.5,0.8]],
         4: [[0.3,0.25],[0.7,0.25],[0.3,0.75],[0.7,0.75]],
         5: [[0.3,0.25],[0.7,0.25],[0.5,0.5],[0.3,0.75],[0.7,0.75]],
         6: [[0.3,0.25],[0.7,0.25],[0.3,0.5],[0.7,0.5],[0.3,0.75],[0.7,0.75]],
@@ -73,11 +85,43 @@
         10:[[0.3,0.15],[0.7,0.15],[0.3,0.3],[0.7,0.3],[0.3,0.45],[0.7,0.45],
             [0.3,0.65],[0.7,0.65],[0.3,0.8],[0.7,0.8]]
       };
+      return layout[rank];
+    }
 
-      let size = 28;
-      positions[rank].forEach(pos => {
-        ctx.drawImage(suitImg, pos[0]*cardWidth - size/2, pos[1]*cardHeight - size/2, size, size);
-      });
+    function drawCard(rank, suitName, color) {
+      let card = document.createElement("div");
+      card.className = "card";
+
+      let top = document.createElement("div");
+      top.className = "corner top-left";
+      top.style.color = color;
+      top.innerHTML = `<div>${rank}</div><img src="${suits[suitName]}">`;
+      card.appendChild(top);
+
+      let bottom = document.createElement("div");
+      bottom.className = "corner bottom-right";
+      bottom.style.color = color;
+      bottom.innerHTML = `<div>${rank}</div><img src="${suits[suitName]}">`;
+      card.appendChild(bottom);
+
+      let symbolsDiv = document.createElement("div");
+      symbolsDiv.className = "symbols";
+
+      let pos = positions(rank);
+      if (pos) {
+        pos.forEach((p,i) => {
+          let row = document.createElement("div");
+          row.className = "row";
+          let img = document.createElement("img");
+          img.src = suits[suitName];
+          row.style.justifyContent = p[0] < 0.5 ? "flex-start" : (p[0] > 0.5 ? "flex-end" : "center");
+          row.appendChild(img);
+          symbolsDiv.appendChild(row);
+        });
+      }
+      card.appendChild(symbolsDiv);
+
+      return card;
     }
 
     function generateDeck() {
@@ -90,16 +134,10 @@
         {name:"club", color:"black"},
         {name:"diamond", color:"red"}
       ];
-
       suitList.forEach(suit => {
         ranks.forEach(rank => {
           if (!suits[suit.name]) return;
-          let canvas = document.createElement("canvas");
-          canvas.width = cardWidth;
-          canvas.height = cardHeight;
-          let ctx = canvas.getContext("2d");
-          drawCard(ctx, rank, suits[suit.name], suit.color);
-          deckDiv.appendChild(canvas);
+          deckDiv.appendChild(drawCard(rank, suit.name, suit.color));
         });
       });
     }
