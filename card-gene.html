@@ -41,47 +41,42 @@
     document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
 
     function drawCard(ctx, rank, suitImg, color) {
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, cardWidth, cardHeight);
-      ctx.strokeRect(0, 0, cardWidth, cardHeight);
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, cardWidth, cardHeight);
+  ctx.strokeRect(0, 0, cardWidth, cardHeight);
 
-      // Rank text (corner)
-      ctx.fillStyle = color;
-      ctx.font = "28px 'Cinzel', serif";
-      ctx.textAlign = "left";
-      ctx.fillText(rank, 12, 35);
+  // Rank text (corner)
+  ctx.fillStyle = color;
+  ctx.font = "28px 'Cinzel', serif";
+  ctx.textAlign = "left";
+  ctx.fillText(rank, 12, 35);
 
-      // Small suit under rank
-      let smallSize = 18;
-      ctx.drawImage(suitImg, 12, 40, smallSize, smallSize);
+  // Small suit under rank
+  let smallSize = 18;
+  ctx.drawImage(suitImg, 12, 40, smallSize, smallSize);
 
-      // Rank mirrored in bottom-right corner
-      ctx.textAlign = "right";
-      ctx.fillText(rank, cardWidth - 12, cardHeight - 12 - smallSize);
-      ctx.drawImage(suitImg, cardWidth - 30, cardHeight - 30, smallSize, smallSize);
+  // Rank mirrored in bottom-right corner
+  ctx.textAlign = "right";
+  ctx.fillText(rank, cardWidth - 12, cardHeight - 12 - smallSize);
+  ctx.drawImage(suitImg, cardWidth - 30, cardHeight - 30, smallSize, smallSize);
 
-      // Main symbols in card body
-      let positions = {
-  2: [[0.5,0.25],[0.5,0.75]],
-  3: [[0.5,0.25],[0.5,0.5],[0.5,0.75]],
-  4: [[0.3,0.25],[0.7,0.25],[0.3,0.75],[0.7,0.75]],
-  5: [[0.3,0.25],[0.7,0.25],[0.5,0.5],[0.3,0.75],[0.7,0.75]],
-  6: [[0.3,0.25],[0.7,0.25],[0.3,0.5],[0.7,0.5],[0.3,0.75],[0.7,0.75]],
-  7: [[0.5,0.15],[0.3,0.3],[0.7,0.3],[0.5,0.5],[0.3,0.7],[0.7,0.7],[0.5,0.85]],
-  8: [[0.3,0.2],[0.7,0.2],[0.3,0.4],[0.7,0.4],[0.3,0.6],[0.7,0.6],[0.3,0.8],[0.7,0.8]],
-  9: [[0.5,0.15],[0.3,0.3],[0.7,0.3],[0.3,0.5],[0.7,0.5],[0.5,0.55],[0.3,0.7],[0.7,0.7],[0.5,0.85]],
-  10: [
-    [0.3,0.2],[0.7,0.2],[0.3,0.35],[0.7,0.35],
-    [0.3,0.5],[0.7,0.5],[0.3,0.65],[0.7,0.65],
-    [0.3,0.8],[0.7,0.8]
-  ]
-};
+  // Number of symbols for numbered cards
+  const numSymbols = parseInt(rank);
 
-      let size = 28;
-      positions[rank].forEach(pos => {
-        ctx.drawImage(suitImg, pos[0]*cardWidth - size/2, pos[1]*cardHeight - size/2, size, size);
-      });
+  if (!isNaN(numSymbols)) {
+    let paddingTop = 60;   // space below top rank
+    let paddingBottom = 60; // space above bottom rank
+    let availableHeight = cardHeight - paddingTop - paddingBottom;
+    let spacing = availableHeight / (numSymbols - 1);
+
+    let size = 28;
+    for (let i = 0; i < numSymbols; i++) {
+      let x = (i % 2 === 0) ? cardWidth * 0.3 : cardWidth * 0.7; // alternate left/right
+      let y = paddingTop + i * spacing;
+      ctx.drawImage(suitImg, x - size/2, y - size/2, size, size);
     }
+  }
+}
 
     function generateDeck() {
       const deckDiv = document.getElementById("deck");
