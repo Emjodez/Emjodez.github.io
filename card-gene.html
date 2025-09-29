@@ -1,126 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Custom Card Generator</title>
+  <title>Custom Playing Card Deck Generator</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px;
-      background: #f2f2f2;
-    }
-    .card {
-      width: 120px;
-      height: 180px;
-      border: 2px solid black;
-      border-radius: 10px;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 8px;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    }
-    .rank {
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .suit-row {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      flex-wrap: nowrap;
-    }
-    .suit {
-      width: 16px;
-      height: 16px;
-    }
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      transform: rotate(180deg);
-    }
-    /* Optional: a custom font loader */
-    #fontLoader {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1000;
-    }
+    body { font-family: sans-serif; text-align: center; background: #f9f9f9; }
+    canvas { margin: 5px; border: 1px solid #aaa; border-radius: 8px; background: white; }
+    #deck { display: flex; flex-wrap: wrap; justify-content: center; }
   </style>
+  <!-- Google Font for nicer style -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Font Loader -->
-  <div id="fontLoader">
-    <label>Custom Font URL: </label>
-    <input type="text" id="fontUrl" placeholder="Paste Google Font link here">
-    <button onclick="loadFont()">Apply</button>
-  </div>
+  <h2>Custom Playing Card Generator</h2>
+  <p>Upload your suit icons (PNG/SVG):</p>
+  <input type="file" id="spadeUpload"> ♠ Spade<br>
+  <input type="file" id="heartUpload"> ♥ Heart<br>
+  <input type="file" id="clubUpload"> ♣ Club<br>
+  <input type="file" id="diamondUpload"> ♦ Diamond<br><br>
+  <button onclick="generateDeck()">Generate Deck</button>
+  
+  <div id="deck"></div>
 
   <script>
-    const suits = {
-      hearts: "♥",
-      diamonds: "♦",
-      clubs: "♣",
-      spades: "♠"
-    };
-    const ranks = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+    let suits = {};
+    const cardWidth = 150, cardHeight = 220;
 
-    function createCard(rank, suit) {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      const top = document.createElement("div");
-      top.className = "top";
-      top.innerHTML = `<span class="rank">${rank}</span><span>${suit}</span>`;
-
-      const center = document.createElement("div");
-      center.className = "suit-row";
-
-      let count = isNaN(rank) ? (rank === "A" ? 1 : 3) : parseInt(rank);
-      if (rank === "10") count = 10;
-
-      for (let i = 0; i < count; i++) {
-        const suitEl = document.createElement("span");
-        suitEl.textContent = suit;
-        center.appendChild(suitEl);
-      }
-
-      const bottom = document.createElement("div");
-      bottom.className = "bottom";
-      bottom.innerHTML = `<span class="rank">${rank}</span><span>${suit}</span>`;
-
-      card.appendChild(top);
-      card.appendChild(center);
-      card.appendChild(bottom);
-
-      return card;
+    function loadImage(file, suitName) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => suits[suitName] = img;
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
-    for (let s in suits) {
-      ranks.forEach(r => {
-        document.body.appendChild(createCard(r, suits[s]));
+    document.getElementById("spadeUpload").onchange = e => loadImage(e.target.files[0], "spade");
+    document.getElementById("heartUpload").onchange = e => loadImage(e.target.files[0], "heart");
+    document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], "club");
+    document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
+
+    function drawCard(ctx, rank, suitImg, color) {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, cardWidth, cardHeight);
+      ctx.strokeRect(0, 0, cardWidth, cardHeight);
+
+      // Rank text (corner)
+      ctx.fillStyle = color;
+      ctx.font = "28px 'Cinzel', serif";
+      ctx.textAlign = "left";
+      ctx.fillText(rank, 12, 35);
+
+      // Small suit under rank
+      let smallSize = 18;
+      ctx.drawImage(suitImg, 12, 40, smallSize, smallSize);
+
+      // Rank mirrored in bottom-right corner
+      ctx.textAlign = "right";
+      ctx.fillText(rank, cardWidth - 12, cardHeight - 12 - smallSize);
+      ctx.drawImage(suitImg, cardWidth - 30, cardHeight - 30, smallSize, smallSize);
+
+      // Main symbols in card body
+      let positions = {
+  2: [[0.5,0.25],[0.5,0.75]],
+  3: [[0.5,0.25],[0.5,0.5],[0.5,0.75]],
+  4: [[0.3,0.25],[0.7,0.25],[0.3,0.75],[0.7,0.75]],
+  5: [[0.3,0.25],[0.7,0.25],[0.5,0.5],[0.3,0.75],[0.7,0.75]],
+  6: [[0.3,0.25],[0.7,0.25],[0.3,0.5],[0.7,0.5],[0.3,0.75],[0.7,0.75]],
+  7: [[0.5,0.15],[0.3,0.3],[0.7,0.3],[0.5,0.5],[0.3,0.7],[0.7,0.7],[0.5,0.85]],
+  8: [[0.3,0.2],[0.7,0.2],[0.3,0.4],[0.7,0.4],[0.3,0.6],[0.7,0.6],[0.3,0.8],[0.7,0.8]],
+  9: [[0.5,0.15],[0.3,0.3],[0.7,0.3],[0.3,0.5],[0.7,0.5],[0.5,0.55],[0.3,0.7],[0.7,0.7],[0.5,0.85]],
+  10: [
+    [0.3,0.2],[0.7,0.2],[0.3,0.35],[0.7,0.35],
+    [0.3,0.5],[0.7,0.5],[0.3,0.65],[0.7,0.65],
+    [0.3,0.8],[0.7,0.8]
+  ]
+};
+
+      let size = 28;
+      positions[rank].forEach(pos => {
+        ctx.drawImage(suitImg, pos[0]*cardWidth - size/2, pos[1]*cardHeight - size/2, size, size);
       });
     }
 
-    function loadFont() {
-      const url = document.getElementById("fontUrl").value.trim();
-      if (url) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = url;
-        document.head.appendChild(link);
-        document.body.style.fontFamily = "'CustomFont', sans-serif";
-      }
+    function generateDeck() {
+      const deckDiv = document.getElementById("deck");
+      deckDiv.innerHTML = "";
+      const ranks = [2,3,4,5,6,7,8,9,10];
+      const suitList = [
+        {name:"spade", color:"black"},
+        {name:"heart", color:"red"},
+        {name:"club", color:"black"},
+        {name:"diamond", color:"red"}
+      ];
+
+      suitList.forEach(suit => {
+        ranks.forEach(rank => {
+          if (!suits[suit.name]) return;
+          let canvas = document.createElement("canvas");
+          canvas.width = cardWidth;
+          canvas.height = cardHeight;
+          let ctx = canvas.getContext("2d");
+          drawCard(ctx, rank, suits[suit.name], suit.color);
+          deckDiv.appendChild(canvas);
+        });
+      });
     }
   </script>
 </body>
