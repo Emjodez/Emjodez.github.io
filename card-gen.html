@@ -6,7 +6,7 @@
     body { font-family: sans-serif; text-align: center; background: #f9f9f9; }
     img.card { margin: 5px; border: 1px solid #aaa; border-radius: 8px; background: white; }
     #deck { display: flex; flex-wrap: wrap; justify-content: center; }
-    input[type=file] { margin-bottom: 5px; }
+    input[type=file], select { margin-bottom: 5px; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 </head>
@@ -26,15 +26,22 @@
   <p>Upload a background image (optional):</p>
   <input type="file" id="bgUpload"><br><br>
 
+  <p>Select font for the card:</p>
+  <select id="fontSelect">
+    <option value="'Cinzel', serif" selected>Cinzel</option>
+    <option value="Arial, sans-serif">Arial</option>
+    <option value="Times New Roman, serif">Times New Roman</option>
+  </select>
+  <input type="file" id="fontUpload"> (optional custom font)<br><br>
+
   <button onclick="generateDeck()">Generate Deck</button>
   
   <div id="deck"></div>
 
   <script>
     const cardWidth = 400, cardHeight = 600;
-    let suits = {};
-    let bgImage = null;
-    let customFaces = {};
+    let suits = {}, bgImage = null, customFaces = {};
+    let fontFamily = "'Cinzel', serif";
 
     function loadImage(file, callback){
       const reader = new FileReader();
@@ -46,38 +53,62 @@
       reader.readAsDataURL(file);
     }
 
+    // Suit uploads
     document.getElementById("spadeUpload").onchange = e => loadImage(e.target.files[0], img => suits["spade"]=img);
     document.getElementById("heartUpload").onchange = e => loadImage(e.target.files[0], img => suits["heart"]=img);
     document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], img => suits["club"]=img);
     document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], img => suits["diamond"]=img);
 
+    // Background upload
     document.getElementById("bgUpload").onchange = e => loadImage(e.target.files[0], img => bgImage = img);
 
+    // Face/ace uploads
     document.getElementById("faceUpload").onchange = e => {
       Array.from(e.target.files).forEach(file=>{
-        const key = file.name.split('.')[0]; // "spade_K", "heart_Q" etc
+        const key = file.name.split('.')[0]; // "spade_K"
         loadImage(file, img => customFaces[key] = img);
       });
     }
 
-    function drawCorner(ctx, rank, suitImg, x, y, color, rotate=false){
-      const fontSize = 60;
-      const suitSize = 36;
-      const spacing = 6;
+    // Font selection
+    document.getElementById("fontSelect").onchange = e => fontFamily = e.target.value;
+    document.getElementById("fontUpload").onchange = e => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt){
+        const style = document.createElement('style');
+        style.appendChild(document.createTextNode(`
+          @font-face {
+            font-family: 'CustomFont';
+            src: url('${evt.target.result}');
+          }
+        `));
+        document.head.appendChild(style);
+        fontFamily = 'CustomFont';
+      };
+      reader.readAsDataURL(file);
+    }
 
+    // Draw corner ranks and suits
+    function drawCorner(ctx, rank, suitImg, x, y, color, rotate=false){
+      const fontSize = 60, suitSize = 36, spacing = 6;
       ctx.save();
       ctx.translate(x, y);
       if(rotate) ctx.rotate(Math.PI);
 
       ctx.fillStyle = color;
-      ctx.font = `${fontSize}px 'Cinzel', serif`;
-      ctx.textAlign = "center";
-      ctx.fillText(rank, 0, 0);
-      ctx.drawImage(suitImg, -suitSize/2, fontSize/2 + spacing, suitSize, suitSize);
+      ctx.font = `${fontSize}px ${fontFamily}`;
 
+      ctx.textAlign = "center";
+      let xOffset = 0;
+    if (rank === 'Q' || rank === 'J' || rank === 'K') xOffset = -8; 
+    ctx.fillText(rank, 0 + xOffset, 0);
+      ctx.drawImage(suitImg, -suitSize/2, fontSize + spacing, suitSize, suitSize);
       ctx.restore();
     }
 
+    // Pip layout alignment
     function getAlignedPositions(grid){
       const positions = [];
       const colX = [0.3,0.5,0.7];
@@ -110,6 +141,7 @@
       return positions;
     }
 
+    // Draw a full card
     function drawCard(ctx, rank, suitImg, color, suitName){
       if(bgImage) ctx.drawImage(bgImage,0,0,cardWidth,cardHeight);
       else { ctx.fillStyle="white"; ctx.fillRect(0,0,cardWidth,cardHeight); }
@@ -139,14 +171,10 @@
         case 4: positions=[[0.3,0.25],[0.7,0.25],[0.3,0.75],[0.7,0.75]]; break;
         case 5: positions=[[0.3,0.25],[0.7,0.25],[0.5,0.5],[0.3,0.75],[0.7,0.75]]; break;
         case 6: positions=[[0.3,0.2],[0.7,0.2],[0.3,0.5],[0.7,0.5],[0.3,0.8],[0.7,0.8]]; break;
-        case 7:
-          positions = getAlignedPositions([[1,0,1],[0,1,0],[1,0,1],[0,0,0],[1,0,1]]); break;
-        case 8:
-          positions = getAlignedPositions([[1,0,1],[0,1,0],[1,0,1],[0,1,0],[1,0,1]]); break;
-        case 9:
-          positions = getAlignedPositions([[1,0,1],[1,0,1],[0,1,0],[1,0,1],[1,0,1]]); break;
-        case 10:
-          positions = getAlignedPositions([[1,0,1],[0,1,0],[1,0,1],[1,0,1],[0,1,0],[1,0,1]]); break;
+        case 7: positions = getAlignedPositions([[1,0,1],[0,1,0],[1,0,1],[0,0,0],[1,0,1]]); break;
+        case 8: positions = getAlignedPositions([[1,0,1],[0,1,0],[1,0,1],[0,1,0],[1,0,1]]); break;
+        case 9: positions = getAlignedPositions([[1,0,1],[1,0,1],[0,1,0],[1,0,1],[1,0,1]]); break;
+        case 10: positions = getAlignedPositions([[1,0,1],[0,1,0],[1,0,1],[1,0,1],[0,1,0],[1,0,1]]); break;
       }
 
       positions.forEach(pos=>{
@@ -160,6 +188,7 @@
       });
     }
 
+    // Generate the full deck
     function generateDeck(){
       const deckDiv = document.getElementById("deck");
       deckDiv.innerHTML="";
