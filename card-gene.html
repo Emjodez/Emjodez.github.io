@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Custom Playing Card Generator</title>
+  <title>Custom Playing Card Deck Generator</title>
   <style>
     body { font-family: sans-serif; text-align: center; }
-    canvas { border: 1px solid black; margin: 10px; }
+    canvas { margin: 5px; border: 1px solid #ddd; }
+    #deck { display: flex; flex-wrap: wrap; justify-content: center; }
   </style>
 </head>
 <body>
-  <h2>Custom Playing Cards</h2>
-  <input type="file" id="spadeUpload"> Spade<br>
-  <input type="file" id="heartUpload"> Heart<br>
-  <input type="file" id="clubUpload"> Club<br>
-  <input type="file" id="diamondUpload"> Diamond<br>
-  <button onclick="generateDeck()">Generate Sample Card</button>
-  <br>
-  <canvas id="cardCanvas" width="300" height="450"></canvas>
+  <h2>Custom Playing Card Generator</h2>
+  <p>Upload your suit icons (PNG/SVG):</p>
+  <input type="file" id="spadeUpload"> ♠ Spade<br>
+  <input type="file" id="heartUpload"> ♥ Heart<br>
+  <input type="file" id="clubUpload"> ♣ Club<br>
+  <input type="file" id="diamondUpload"> ♦ Diamond<br><br>
+  <button onclick="generateDeck()">Generate Deck</button>
+  
+  <div id="deck"></div>
 
   <script>
-    const canvas = document.getElementById("cardCanvas");
-    const ctx = canvas.getContext("2d");
     let suits = {};
+    const cardWidth = 150, cardHeight = 220;
 
     function loadImage(file, suitName) {
       const reader = new FileReader();
@@ -37,17 +38,56 @@
     document.getElementById("clubUpload").onchange = e => loadImage(e.target.files[0], "club");
     document.getElementById("diamondUpload").onchange = e => loadImage(e.target.files[0], "diamond");
 
-    function generateDeck() {
-      ctx.clearRect(0,0,300,450);
+    function drawCard(ctx, rank, suitImg, color) {
       ctx.fillStyle = "white";
-      ctx.fillRect(0,0,300,450);
-      ctx.strokeRect(0,0,300,450);
+      ctx.fillRect(0, 0, cardWidth, cardHeight);
+      ctx.strokeRect(0, 0, cardWidth, cardHeight);
 
-      ctx.fillStyle = "black";
-      ctx.font = "30px serif";
-      ctx.fillText("A", 20, 40);
+      ctx.fillStyle = color;
+      ctx.font = "20px serif";
+      ctx.fillText(rank, 10, 25);
 
-      if (suits.spade) ctx.drawImage(suits.spade, 20, 60, 50, 50);
+      // Draw correct number of suit symbols
+      let positions = {
+        2: [[0.5,0.2],[0.5,0.8]],
+        3: [[0.5,0.2],[0.5,0.5],[0.5,0.8]],
+        4: [[0.3,0.2],[0.7,0.2],[0.3,0.8],[0.7,0.8]],
+        5: [[0.3,0.2],[0.7,0.2],[0.5,0.5],[0.3,0.8],[0.7,0.8]],
+        6: [[0.3,0.2],[0.7,0.2],[0.3,0.5],[0.7,0.5],[0.3,0.8],[0.7,0.8]],
+        7: [[0.5,0.1],[0.3,0.3],[0.7,0.3],[0.5,0.5],[0.3,0.7],[0.7,0.7],[0.5,0.9]],
+        8: [[0.3,0.2],[0.7,0.2],[0.3,0.4],[0.7,0.4],[0.3,0.6],[0.7,0.6],[0.3,0.8],[0.7,0.8]],
+        9: [[0.5,0.1],[0.3,0.25],[0.7,0.25],[0.3,0.45],[0.7,0.45],[0.5,0.5],[0.3,0.7],[0.7,0.7],[0.5,0.9]],
+        10:[[0.3,0.1],[0.7,0.1],[0.3,0.3],[0.7,0.3],[0.3,0.5],[0.7,0.5],[0.3,0.7],[0.7,0.7],[0.3,0.9],[0.7,0.9]]
+      };
+
+      let size = 30;
+      positions[rank].forEach(pos => {
+        ctx.drawImage(suitImg, pos[0]*cardWidth - size/2, pos[1]*cardHeight - size/2, size, size);
+      });
+    }
+
+    function generateDeck() {
+      const deckDiv = document.getElementById("deck");
+      deckDiv.innerHTML = "";
+      const ranks = [2,3,4,5,6,7,8,9,10];
+      const suitList = [
+        {name:"spade", color:"black"},
+        {name:"heart", color:"red"},
+        {name:"club", color:"black"},
+        {name:"diamond", color:"red"}
+      ];
+
+      suitList.forEach(suit => {
+        ranks.forEach(rank => {
+          if (!suits[suit.name]) return;
+          let canvas = document.createElement("canvas");
+          canvas.width = cardWidth;
+          canvas.height = cardHeight;
+          let ctx = canvas.getContext("2d");
+          drawCard(ctx, rank, suits[suit.name], suit.color);
+          deckDiv.appendChild(canvas);
+        });
+      });
     }
   </script>
 </body>
