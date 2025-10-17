@@ -47,10 +47,20 @@ a.mail-button {
 }
 a.mail-button:hover { background: #06274c; transform: scale(1.05); }
 
+a.back-arrow-escape {
+    position: absolute;
+    transition: all 0.3s ease-out;
+    left: 50%;
+    top: 60%;
+    transform: translate(50%, -20%);
+}
 a.back-arrow img {
     width: 80px;
-    transition: transform 0.3s;
+    transition: transform 0.2s;
 }
-a.back-arrow:hover img { transform: rotate(-10deg) scale(1.1); }
 
-.section { margin-bottom: 40px; }
+
+a.back-arrow img:hover { 
+    transform: rotate(-10deg) scale(1.1);
+}
+

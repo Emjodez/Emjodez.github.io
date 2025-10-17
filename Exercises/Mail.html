@@ -13,7 +13,57 @@
     <a href="./index.html" target="_blank" class="back-arrow">
         <img src="https://www.freeiconspng.com/uploads/green-arrow-png-1.png" alt="Strzałka zielona" />
     </a>
+    <p>Ta strzałka robi to samo ale jeszcze ucieka:</p>
+    <a href="./index.html" target="_blank" class="back-arrow back-arrow-escape">
+        <img src="https://www.freeiconspng.com/uploads/green-arrow-png-1.png" alt="Strzałka zielona" />
+    </a>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.querySelector('.back-arrow-escape');
+            const avoidanceDistance = 150; 
+            const moveDistance = 300; 
+            
+            document.addEventListener('mousemove', function(e) {
+                const buttonRect = button.getBoundingClientRect();
+                const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+                const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+                
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - buttonCenterX, 2) + 
+                    Math.pow(mouseY - buttonCenterY, 2)
+                );
+                
+
+                if (distance < avoidanceDistance) {
+                    const deltaX = buttonCenterX - mouseX;
+                    const deltaY = buttonCenterY - mouseY;
+                    
+                    const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                    const moveX = (deltaX / length) * moveDistance;
+                    const moveY = (deltaY / length) * moveDistance;
+                    
+                    let newX = buttonCenterX + moveX;
+                    let newY = buttonCenterY + moveY;
+                    
+                    const maxX = window.innerWidth - buttonRect.width / 2;
+                    const maxY = window.innerHeight - buttonRect.height / 2;
+                    const minX = buttonRect.width / 2;
+                    const minY = buttonRect.height / 2;
+                    
+                    newX = Math.max(minX, Math.min(maxX, newX));
+                    newY = Math.max(minY, Math.min(maxY, newY));
+                    
+                    button.style.left = newX + 'px';
+                    button.style.top = newY + 'px';
+                    button.style.transform = 'translate(-50%, -50%)';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
