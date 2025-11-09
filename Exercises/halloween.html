@@ -1,514 +1,90 @@
 <!doctype html>
 <html lang="pl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Halloween — Strona straszna 🎃</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Noc Koszmarów</title>
 <style>
-  /* --- reset --- */
-  * {box-sizing: border-box; margin: 0; padding: 0}
-  html,body {height:100%}
+  * {margin:0;padding:0;box-sizing:border-box}
+  html,body {
+    height:100%;
+    background:#000;
+    color:#ffb87a;
+    font-family:"Cinzel",serif;
+    overflow:hidden;
+  }
+
   body {
-    font-family: "Segoe UI", Roboto, system-ui, Arial, sans-serif;
-    background: radial-gradient(ellipse at 20% 10%, #0b0b0b 0%, #050306 30%, #07030a 60%, #06020a 100%);
-    color: #f1e9d2;
-    overflow: hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
   }
 
-  /* --- moon + fog --- */
-  .sky {
-    position:fixed; inset:0; pointer-events:none;
-  }
-  .moon {
-    position: absolute;
-    right: 8%;
-    top: 6%;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fff9d6, #e6d9a8 40%, rgba(220,200,120,0.6) 60%, rgba(0,0,0,0.15) 100%);
-    box-shadow: 0 0 60px 10px rgba(255,220,100,0.06), inset -20px -10px 40px rgba(0,0,0,0.2);
-    filter: blur(0.4px);
-    opacity: .95;
-    transform: rotate(-8deg);
-  }
-  .fog {
-    position:absolute; inset:-10% -10% auto -10%; height:40%;
-    background: linear-gradient(180deg, rgba(10,10,10,0.0), rgba(10,10,10,0.55));
-    mix-blend-mode: screen;
-    opacity: 0.25;
-    pointer-events:none;
-  }
-
-  /* --- header --- */
-  header {
-    position: absolute;
-    top: 10vh;
-    left: 6%;
-    right: 6%;
-    text-align: left;
-    z-index: 20;
-  }
   h1 {
-    font-size: clamp(2.2rem, 5vw, 5rem);
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: #ffd9a3;
-    text-shadow:
-      0 0 12px rgba(255,120,60,0.12),
-      0 12px 30px rgba(0,0,0,0.8);
-    margin-bottom: .25em;
-    animation: flicker 3s infinite;
-  }
-  @keyframes flicker {
-    0%{opacity:1; text-shadow: 0 0 18px rgba(255,120,60,0.14)}
-    5%{opacity:.12}
-    8%{opacity:1}
-    15%{opacity:.75}
-    20%{opacity:1}
-    100%{opacity:1}
-  }
-  p.lead {
-    max-width: 700px;
-    color: #e6caa3;
-    font-size: clamp(.9rem, 1.6vw, 1.15rem);
-    line-height: 1.4;
-    text-shadow: 0 6px 18px rgba(0,0,0,0.6);
-    margin-bottom: 1.25rem;
-  }
-
-  /* --- bats --- */
-  .bat {
-    position: absolute;
-    width: 70px;
-    height: 40px;
-    background: transparent;
-    transform-origin: center;
-    z-index: 15;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-    pointer-events: none;
-    animation: wing 0.6s ease-in-out infinite;
-  }
-  .bat svg { width:100%; height:100%; display:block; }
-  @keyframes wing {
-    0%{transform: translateY(0) rotate(0deg) scale(.9)}
-    50%{transform: translateY(-12px) rotate(-6deg) scale(1)}
-    100%{transform: translateY(0) rotate(0deg) scale(.9)}
-  }
-
-  /* --- ground and tombstones --- */
-  .ground {
-    position: absolute;
-    bottom: 0;
-    left: 0; right: 0;
-    height: 28vh;
-    background: linear-gradient(180deg, rgba(0,0,0,0), #020203 20%, #080705 100%);
-    z-index: 10;
-    box-shadow: inset 0 40px 80px rgba(0,0,0,0.7);
-  }
-  .tomb {
-    position:absolute; bottom: 6vh;
-    left: 12%;
-    width:120px; height:140px;
-    background: linear-gradient(180deg,#2b2b2b,#1b1b1b);
-    border-radius: 6px;
-    transform: rotate(-6deg) translateY(0);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-  }
-  .tomb:before {
-    content:'R I P';
-    display:block;
-    text-align:center;
-    padding-top:36px;
-    color:#cbbdb0;
-    font-weight:700;
+    font-size:clamp(2.5rem,8vw,6rem);
     letter-spacing:4px;
-    font-family: "Courier New", monospace;
+    text-transform:uppercase;
+    text-align:center;
+    color:#ffb87a;
+    text-shadow:
+      0 0 10px rgba(255,120,50,0.3),
+      0 0 40px rgba(255,60,0,0.6),
+      0 0 90px rgba(255,30,0,0.6);
+    animation:flicker 3s infinite;
+    z-index:10;
   }
 
-  /* --- eyes in the dark --- */
-  .eyes {
-    position:absolute;
-    left: 45%;
-    top: 45%;
-    z-index: 12;
-    transform: translate(-50%,-50%);
-    pointer-events:none;
-    opacity: .9;
-  }
-  .eye {
-    display:inline-block;
-    width:36px;height:18px;border-radius:18px;
-    background: radial-gradient(circle at 40% 50%, #fff6b3 0%, #ffd45a 30%, #ff9a1f 60%, #000 61%);
-    margin: 0 8px;
-    box-shadow: 0 0 20px rgba(255,150,30,0.8), inset -6px 0 12px rgba(0,0,0,0.4);
-    animation: blink 5s infinite;
-  }
-  @keyframes blink {
-    0%, 95% { transform: scaleY(1); }
-    96% { transform: scaleY(.05); }
-    100% { transform: scaleY(1); }
+  @keyframes flicker {
+    0%,18%,22%,25%,53%,57%,100% {opacity:1;}
+    20%,24%,55% {opacity:0.3;}
   }
 
-  /* --- blood drip (decorative) --- */
+  /* Blood drips */
   .blood {
-    position: absolute;
-    left: 0; top: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 30;
+    position:fixed;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:5;
   }
+
   .drip {
     position:absolute;
-    width:22px; height:44px;
-    background: linear-gradient(#7a0000,#3a0000);
-    border-radius: 50% 50% 50% 50%;
-    box-shadow: 0 6px 10px rgba(0,0,0,0.6), inset -2px -6px 12px rgba(255,60,60,0.15);
-    transform-origin: top;
-    animation: drip 4s linear infinite;
-    opacity: .9;
+    top:0;
+    width:20px;
+    height:50px;
+    background:linear-gradient(#700000,#2b0000);
+    border-radius:10px;
+    animation:drip 4s linear infinite;
+    opacity:0.9;
+    box-shadow:0 0 10px rgba(255,0,0,0.3);
   }
+
   @keyframes drip {
-    0% { transform: translateY(-10vh) scaleY(.6); opacity:0 }
-    10% { opacity:1 }
-    60% { transform: translateY(68vh) scaleY(1.1) }
-    100% { transform: translateY(75vh) scaleY(1.3); opacity:0 }
-  }
-
-  /* --- control panel --- */
-  .controls {
-    position: absolute;
-    right: 6%;
-    bottom: 8%;
-    z-index: 40;
-    background: rgba(0,0,0,0.45);
-    border: 1px solid rgba(255,255,255,0.04);
-    padding: 10px 14px;
-    border-radius: 10px;
-    backdrop-filter: blur(6px);
-    color: #ffd9a3;
-    font-size: .95rem;
-    display:flex;
-    gap:.6rem;
-    align-items:center;
-  }
-  .btn {
-    background: linear-gradient(180deg,#3a1f1f,#1f0e0e);
-    color: #ffd9a3;
-    border: none;
-    padding: .45rem .75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-  }
-  .btn:active { transform: translateY(1px) }
-
-  /* --- modal / jump scare overlay --- */
-  .overlay {
-    position: fixed; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    background: rgba(0,0,0,0.0);
-    z-index: 100;
-    pointer-events: none;
-  }
-  .scream {
-    width: 92vw; max-width: 900px;
-    height: 80vh; max-height: 650px;
-    display:flex; align-items:center; justify-content:center;
-    font-size: clamp(2rem,6vw,5rem);
-    color: #fff;
-    opacity: 0;
-    transform: scale(.95);
-    transition: all .28s ease-out;
-    text-shadow: 0 12px 40px rgba(0,0,0,0.9);
-    pointer-events: none;
-  }
-  .scream.show {
-    pointer-events: auto;
-    opacity: 1;
-    transform: scale(1);
-    animation: zoomIn .42s ease-out;
-  }
-  @keyframes zoomIn { from {transform: scale(.7)} to {transform: scale(1)} }
-
-  /* --- small note --- */
-  .note {
-    position: absolute;
-    left: 6%;
-    bottom: 6%;
-    color: #d7c3a2;
-    font-size:.9rem;
-    z-index: 40;
-    backdrop-filter: blur(2px);
-  }
-
-  /* responsive */
-  @media (max-width:640px){
-    .tomb { display:none }
-    .controls { right: 4%; bottom: 4% }
+    0% {transform:translateY(-100%) scaleY(.6);opacity:0;}
+    10% {opacity:1;}
+    60% {transform:translateY(70vh) scaleY(1.1);}
+    100% {transform:translateY(100vh) scaleY(1.3);opacity:0;}
   }
 </style>
 </head>
 <body>
-  <div class="sky" aria-hidden="true">
-    <div class="moon"></div>
-    <div class="fog"></div>
-  </div>
-
-  <header>
-    <h1 id="title">Noc Koszmarów</h1>
-    <p class="lead">Witaj na stronie, która nie śni — ona budzi. Przesuwaj myszką, nasłuchuj... i uważaj co zobaczysz w cieniu.</p>
-  </header>
-
-  <!-- floating bats (injected by JS) -->
-  <div id="bats"></div>
-
-  <!-- eyes in dark -->
-  <div class="eyes" aria-hidden="true">
-    <div class="eye"></div>
-    <div class="eye"></div>
-    <div class="eye"></div>
-  </div>
-
-  <!-- blood layer -->
+  <h1>Noc Koszmarów</h1>
   <div class="blood" id="blood"></div>
 
-  <div class="ground" aria-hidden="true">
-    <div class="tomb" style="left:12%"></div>
-    <div class="tomb" style="left:28%; transform: rotate(8deg) scale(.9)"></div>
-    <div class="tomb" style="left:52%; transform: rotate(-4deg) scale(1.05)"></div>
-  </div>
-
-  <div class="controls" role="region" aria-label="Panel sterowania">
-    <button class="btn" id="soundBtn" aria-pressed="false">Włącz dźwięk</button>
-    <button class="btn" id="scareBtn">Jump-scare!</button>
-    <button class="btn" id="themeBtn">Tryb ciemny/ciemniejszy</button>
-  </div>
-
-  <div class="note">Kliknij "Włącz dźwięk", żeby usłyszeć mroczny ambient. Stronę możesz edytować — wszystko jest w kodzie.</div>
-
-  <div class="overlay" id="overlay" aria-hidden="true">
-    <div class="scream" id="scream">Boo!</div>
-  </div>
-
-<script>
-/* ========== CONFIG ========== */
-const BAT_COUNT = 8;
-const SOUND_VOLUME = 0.35; // default volume for ambient
-let soundOn = false;
-
-/* ========== UTILS ========== */
-function rand(min,max){ return Math.random()*(max-min)+min }
-
-/* ========== CREATE BATS ========== */
-const batsEl = document.getElementById('bats');
-for(let i=0;i<BAT_COUNT;i++){
-  const bat = document.createElement('div');
-  bat.className = 'bat';
-  bat.style.left = (rand(-10,110)) + '%';
-  bat.style.top = (rand(2,80)) + '%';
-  bat.style.opacity = rand(.45,1).toFixed(2);
-  bat.style.transform = `scale(${rand(.6,1.2)})`;
-  // simple path animation using CSS + JS
-  const svg = `
-    <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M10 30 C 30 10, 40 10, 50 30 C 60 10, 70 10, 90 30 L70 25 L60 35 L50 25 L40 35 L30 25 Z"
-        fill="#0b0b0b" stroke="#2b1a1a" stroke-width="1"/>
-    </svg>`;
-  bat.innerHTML = svg;
-  batsEl.appendChild(bat);
-
-  // animate with requestAnimationFrame for position change
-  (function animateBat(el){
-    const speed = rand(.2,1.1);
-    let angle = rand(0,Math.PI*2);
-    function tick(){
-      angle += speed*0.002;
-      const x = (parseFloat(el.style.left) || 0) + Math.cos(angle) * (0.1*speed);
-      const y = (parseFloat(el.style.top)  || 0) + Math.sin(angle) * (0.2*speed);
-      // wrap-around
-      el.style.left = ((x+120)%120 - 10) + '%';
-      el.style.top  = Math.min(92, Math.max(2, y)) + '%';
-      el.style.transform = `translateX(${Math.sin(angle*3)*8}px) rotate(${Math.sin(angle)*12}deg) scale(${parseFloat(el.style.transform.match(/scale$begin:math:text$([^)]+)$end:math:text$/)?.[1]||1)})`;
-      requestAnimationFrame(tick);
+  <script>
+    const blood = document.getElementById('blood');
+    for (let i=0;i<10;i++){
+      const d=document.createElement('div');
+      d.className='drip';
+      d.style.left=Math.random()*98+'vw';
+      d.style.width=(12+Math.random()*20)+'px';
+      d.style.height=(30+Math.random()*60)+'px';
+      d.style.animationDelay=(Math.random()*3)+'s';
+      blood.appendChild(d);
     }
-    tick();
-  })(bat);
-}
-
-/* ========== BLOOD DRIPS ========== */
-const blood = document.getElementById('blood');
-for(let i=0;i<7;i++){
-  const d = document.createElement('div');
-  d.className = 'drip';
-  d.style.left = rand(2,96) + 'vw';
-  d.style.animationDelay = rand(0,3) + 's';
-  d.style.width = rand(12,28) + 'px';
-  d.style.height = rand(28,68) + 'px';
-  blood.appendChild(d);
-}
-
-/* ========== AUDIO (WebAudio ambient) ========== */
-let audioCtx, master, osc1, osc2, lfo;
-function initAudio(){
-  if(audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  master = audioCtx.createGain();
-  master.gain.value = 0;
-  master.connect(audioCtx.destination);
-
-  // low rumble using two detuned oscillators + filter
-  osc1 = audioCtx.createOscillator();
-  osc1.type = 'sine';
-  osc1.frequency.value = 40; // sub rumble
-
-  osc2 = audioCtx.createOscillator();
-  osc2.type = 'sine';
-  osc2.frequency.value = 46;
-
-  const filter = audioCtx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 300;
-
-  osc1.connect(filter);
-  osc2.connect(filter);
-  filter.connect(master);
-
-  // slow LFO on gain to create breathing
-  lfo = audioCtx.createOscillator();
-  const lfoGain = audioCtx.createGain();
-  lfo.type = 'sine';
-  lfo.frequency.value = 0.07;
-  lfoGain.gain.value = 0.18;
-  lfo.connect(lfoGain);
-  lfoGain.connect(master.gain);
-
-  osc1.start();
-  osc2.start();
-  lfo.start();
-}
-function toggleSound(on){
-  if(!audioCtx) initAudio();
-  soundOn = on;
-  document.getElementById('soundBtn').textContent = on ? 'Wyłącz dźwięk' : 'Włącz dźwięk';
-  document.getElementById('soundBtn').setAttribute('aria-pressed', String(on));
-  // ramp volume
-  const now = audioCtx.currentTime;
-  master.gain.cancelScheduledValues(now);
-  master.gain.linearRampToValueAtTime(on ? SOUND_VOLUME : 0.0, now + 0.8);
-}
-
-/* user gesture required to start audio in some browsers */
-document.getElementById('soundBtn').addEventListener('click', async () => {
-  try {
-    if(!audioCtx || audioCtx.state === 'suspended') {
-      initAudio();
-      if(audioCtx.state === 'suspended') await audioCtx.resume();
-    }
-    toggleSound(!soundOn);
-  } catch(e){ console.warn('audio err', e) }
-});
-
-/* ========== THEME (tiny change) ========== */
-const themeBtn = document.getElementById('themeBtn');
-themeBtn.addEventListener('click', () => {
-  document.body.classList.toggle('ultra');
-  if(document.body.classList.contains('ultra')){
-    document.body.style.background = 'radial-gradient(ellipse at 30% 10%, #020202 0%, #000 35%, #040006 100%)';
-  } else {
-    document.body.style.background = '';
-  }
-});
-
-/* ========== MOUSE INTERACTION: title follows mouse slightly ========== */
-const title = document.getElementById('title');
-window.addEventListener('mousemove', e=>{
-  const cx = window.innerWidth/2;
-  const cy = window.innerHeight/2;
-  const dx = (e.clientX - cx) / cx;
-  const dy = (e.clientY - cy) / cy;
-  title.style.transform = `translate(${dx*6}px, ${dy*4}px)`;
-  // eyes follow mouse a little
-  document.querySelectorAll('.eye').forEach((eye,i)=>{
-    eye.style.transform = `translate(${dx*(8+i*2)}px, ${dy*(6+i*1)}px)`;
-  });
-});
-
-/* ========== JUMP-SCARE ========== */
-const overlay = document.getElementById('overlay');
-const scream = document.getElementById('scream');
-let scareCooldown = false;
-document.getElementById('scareBtn').addEventListener('click', triggerScare);
-
-function triggerScare(){
-  if(scareCooldown) return;
-  scareCooldown = true;
-  overlay.style.pointerEvents = 'auto';
-  overlay.ariaHidden = 'false';
-  scream.classList.add('show');
-  // play two quick loud pulses
-  if(!audioCtx) initAudio();
-  if(audioCtx){
-    const g = audioCtx.createGain();
-    g.connect(audioCtx.destination);
-    g.gain.value = 0;
-    const o = audioCtx.createOscillator();
-    o.type = 'square';
-    o.frequency.value = 420;
-    o.connect(g);
-    const now = audioCtx.currentTime;
-    g.gain.linearRampToValueAtTime(1.0, now + 0.02);
-    g.gain.linearRampToValueAtTime(0.001, now + 0.22);
-    o.start();
-    o.stop(now + 0.23);
-  }
-
-  // visual flash
-  document.body.style.transition = 'background .12s';
-  document.body.style.filter = 'brightness(1.9)';
-  setTimeout(()=>{ document.body.style.filter = ''; }, 220);
-
-  // change scream text / image
-  scream.textContent = 'AHHH!!';
-
-  // hide after short time
-  setTimeout(()=>{
-    scream.classList.remove('show');
-    overlay.style.pointerEvents = 'none';
-    overlay.ariaHidden = 'true';
-    scareCooldown = false;
-  }, 1300);
-}
-
-/* allow Esc to cancel overlay if visible */
-window.addEventListener('keydown', (e)=> {
-  if(e.key === 'Escape') {
-    scream.classList.remove('show');
-    overlay.style.pointerEvents = 'none';
-    overlay.ariaHidden = 'true';
-  }
-});
-
-/* Accessibility: stop audio when page hidden */
-document.addEventListener('visibilitychange', ()=>{
-  if(document.hidden && audioCtx && audioCtx.state === 'running'){ toggleSound(false) }
-});
-
-/* --- small friendly instruction in console for devs --- */
-console.log('Halloween page loaded. Edit BAT_COUNT and styles to customize.');
-
-/* optional: auto-start a soft ambient after a few seconds if user clicked earlier */
-setTimeout(()=>{
-  // if user hasn't enabled but interacted (click anywhere), enable subtle ambient automatically on first click anywhere
-  function startOnFirstClick(){
-    window.removeEventListener('click', startOnFirstClick);
-    if(!soundOn) {
-      try { initAudio(); toggleSound(true); setTimeout(()=>toggleSound(false), 8000); } catch(e){}
-    }
-  }
-  window.addEventListener('click', startOnFirstClick);
-}, 800);
-</script>
+  </script>
 </body>
 </html>
