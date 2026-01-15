@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela Kolorów HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            border: 2px solid #ccc;
+        }
+
+        .color-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #fff;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .text-black { color: #000; }
+        .text-white { color: #fff; }
+
+        .silver  { background-color: #C0C0C0; }
+        .gray    { background-color: #808080; }
+        .maroon  { background-color: #800000; }
+        .green   { background-color: #008000; }
+        
+        .white   { background-color: #FFFFFF; }
+        .black   { background-color: #000000; }
+        .red     { background-color: #FF0000; }
+        .lime    { background-color: #00FF00; }
+        
+        .navy    { background-color: #000080; }
+        .purple  { background-color: #800080; }
+        .olive   { background-color: #808000; }
+        .teal    { background-color: #008080; }
+        
+        .blue    { background-color: #0000FF; }
+        .magenta { background-color: #FF00FF; }
+        .yellow  { background-color: #FFFF00; }
+        .cyan    { background-color: #00FFFF; }
+
+        .hex {
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-container">
+        <div class="color-box silver text-black"><span>silver</span><span class="hex">C0C0C0</span></div>
+        <div class="color-box gray text-white"><span>gray</span><span class="hex">808080</span></div>
+        <div class="color-box maroon text-white"><span>maroon</span><span class="hex">800000</span></div>
+        <div class="color-box green text-white"><span>green</span><span class="hex">008000</span></div>
+
+        <div class="color-box white text-black"><span>white</span><span class="hex">FFFFFF</span></div>
+        <div class="color-box black text-white"><span>black</span><span class="hex">000000</span></div>
+        <div class="color-box red text-black"><span>red</span><span class="hex">FF0000</span></div>
+        <div class="color-box lime text-black"><span>lime</span><span class="hex">00FF00</span></div>
+
+        <div class="color-box navy text-white"><span>navy</span><span class="hex">000080</span></div>
+        <div class="color-box purple text-white"><span>purple</span><span class="hex">800080</span></div>
+        <div class="color-box olive text-white"><span>olive</span><span class="hex">808000</span></div>
+        <div class="color-box teal text-white"><span>teal</span><span class="hex">008080</span></div>
+
+        <div class="color-box blue text-white"><span>blue</span><span class="hex">0000FF</span></div>
+        <div class="color-box magenta text-black"><span>magenta</span><span class="hex">FF00FF</span></div>
+        <div class="color-box yellow text-black"><span>yellow</span><span class="hex">FFFF00</span></div>
+        <div class="color-box cyan text-black"><span>cyan</span><span class="hex">00FFFF</span></div>
+    </div>
+
+</body>
+</html>
